@@ -7,6 +7,7 @@ import (
 var Commands = []cli.Command{
 	commandVolume,
 	commandImage,
+	commandContainer,
 }
 
 var commandVolume = cli.Command{
@@ -16,8 +17,12 @@ var commandVolume = cli.Command{
 	Action:    doVolume,
 	Flags: []cli.Flag{
 		cli.BoolFlag{
+			Name:  "dryrun, D",
+			Usage: "dry run, do not delete anything",
+		},
+		cli.BoolFlag{
 			Name:  "force, f",
-			Usage: "delete volumes actually",
+			Usage: "delete a image by force",
 		},
 	},
 }
@@ -29,16 +34,43 @@ var commandImage = cli.Command{
 	Action:    doImage,
 	Flags: []cli.Flag{
 		cli.BoolFlag{
+			Name:  "dryrun, D",
+			Usage: "dry run, do not delete anything",
+		},
+		cli.BoolFlag{
 			Name:  "force, f",
-			Usage: "delete a image actually",
+			Usage: "delete a image by force",
 		},
 		cli.StringFlag{
 			Name:  "name",
 			Usage: "specify a image name",
 		},
-		cli.IntFlag{
+		cli.StringFlag{
 			Name:  "duration, d",
-			Usage: "delete images whose Created is passed for a specified duration in seconds",
+			Value: "0s",
+			Usage: "delete images whose Created is passed for a specified duration, e.g. 10s,10m,1h10m",
+		},
+	},
+}
+
+var commandContainer = cli.Command{
+	Name:      "container",
+	ShortName: "c",
+	Usage:     "Removes invalid containers from Docker host",
+	Action:    doContainer,
+	Flags: []cli.Flag{
+		cli.BoolFlag{
+			Name:  "dryrun, D",
+			Usage: "dry run, do not delete anything",
+		},
+		cli.BoolFlag{
+			Name:  "force, f",
+			Usage: "delete a container by force",
+		},
+		cli.StringFlag{
+			Name:  "duration, d",
+			Value: "0s",
+			Usage: "delete containers whose Fininished is passed for a specified duration, e.g. 10s,10m,1h10m",
 		},
 	},
 }

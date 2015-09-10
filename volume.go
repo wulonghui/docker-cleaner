@@ -73,7 +73,7 @@ func doVolume(c *cli.Context) {
 		}
 		for _, dir := range dirs {
 			var err error
-			run(!c.Bool("force"),
+			run(c.Bool("dryrun"),
 				func() {
 					fmt.Println("dryrun: removed:", dir)
 				},
@@ -83,7 +83,7 @@ func doVolume(c *cli.Context) {
 				},
 			)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "%s: failed to delete volume id:%s", err, volumeId)
+				fmt.Fprintf(os.Stderr, "%s: failed to delete volume id:%s \n", err, volumeId)
 			}
 		}
 	}
