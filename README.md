@@ -23,28 +23,30 @@ NAME:
 
 USAGE:
    docker-cleaner [global options] command [command options] [arguments...]
-
+   
 VERSION:
    0.1.0
-
-AUTHOR:
-  TANABE Ken-ichi - <nabeken@tknetworks.org>
-
+   
+AUTHOR(S):
+   TANABE Ken-ichi <nabeken@tknetworks.org> 
+   
 COMMANDS:
-   volume, v	Removes orphaned volumes from Docker host
-   image, i	Removes orphaned images from Docker host
-   help, h	Shows a list of commands or help for one command
+   volume, v   Removes orphaned volumes from Docker host
+   image, i Removes orphaned images from Docker host
+   container, c   Removes orphaned containers from Docker host
+   help, h  Shows a list of commands or help for one command
    
 GLOBAL OPTIONS:
-   --directory, -d '/var/lib/docker'		specify a docker directory
-   --endpoint, -e 'unix:///var/run/docker.sock'	specify a docker endpoint
-   --help, -h					show help
-   --version, -v				print the version
+   --directory, -d "/var/lib/docker"      specify a docker directory
+   --endpoint, -e "unix:///var/run/docker.sock" specify a docker endpoint
+   --help, -h              show help
+   --version, -v           print the version
 ```
 
 # Author
 
 TANABE Ken-ichi
+Wulonghui
 
 # LICENSE
 

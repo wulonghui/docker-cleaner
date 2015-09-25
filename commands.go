@@ -22,7 +22,7 @@ var commandVolume = cli.Command{
 		},
 		cli.BoolFlag{
 			Name:  "force, f",
-			Usage: "delete a image by force",
+			Usage: "delete volumes by force",
 		},
 	},
 }
@@ -39,7 +39,7 @@ var commandImage = cli.Command{
 		},
 		cli.BoolFlag{
 			Name:  "force, f",
-			Usage: "delete a image by force",
+			Usage: "delete images by force",
 		},
 		cli.StringFlag{
 			Name:  "name",
@@ -56,7 +56,7 @@ var commandImage = cli.Command{
 var commandContainer = cli.Command{
 	Name:      "container",
 	ShortName: "c",
-	Usage:     "Removes invalid containers from Docker host",
+	Usage:     "Removes orphaned containers from Docker host",
 	Action:    doContainer,
 	Flags: []cli.Flag{
 		cli.BoolFlag{
@@ -65,7 +65,7 @@ var commandContainer = cli.Command{
 		},
 		cli.BoolFlag{
 			Name:  "force, f",
-			Usage: "delete a container by force",
+			Usage: "delete containers by force",
 		},
 		cli.StringFlag{
 			Name:  "duration, d",
