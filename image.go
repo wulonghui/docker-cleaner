@@ -23,15 +23,37 @@ func (i images) Filter(f filter) images {
 	return ret
 }
 
-func (i images) FilterByName(name string) images {
+func (i images) FilterByIncludeName(include []string) images {
 	return i.Filter(func(object interface{}) bool {
+		if len(include) == 0 {
+			return true
+		}
+
 		image := object.(docker.APIImages)
 		for i := range image.RepoTags {
-			if strings.HasPrefix(image.RepoTags[i], name) {
-				return true
+			//include
+			for _, name := range include {
+				if strings.HasPrefix(image.RepoTags[i], name) {
+					return true
+				}
 			}
 		}
 		return false
+	})
+}
+
+func (i images) FilterByExclusiveName(exclusive []string) images {
+	return i.Filter(func(object interface{}) bool {
+		image := object.(docker.APIImages)
+		for i := range image.RepoTags {
+			//exclusive
+			for _, name := range exclusive {
+				if strings.HasPrefix(image.RepoTags[i], name) {
+					return false
+				}
+			}
+		}
+		return true
 	})
 }
 
@@ -70,8 +92,12 @@ func doImage(c *cli.Context) {
 		log.Fatal(err)
 	}
 
+	include := c.StringSlice("include")
+	exclusive := c.StringSlice("exclusive")
+
 	ret := images.
-		FilterByName(c.String("name")).
+		FilterByIncludeName(include).
+		FilterByExclusiveName(exclusive).
 		FilterByCreatedAt(duration)
 
 	for i := range ret {

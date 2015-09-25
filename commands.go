@@ -41,9 +41,13 @@ var commandImage = cli.Command{
 			Name:  "force, f",
 			Usage: "delete images by force",
 		},
-		cli.StringFlag{
-			Name:  "name",
-			Usage: "specify a image name",
+		cli.StringSliceFlag{
+			Name:  "include, i",
+			Usage: "specify image names to remove",
+		},
+		cli.StringSliceFlag{
+			Name:  "exclusive, e",
+			Usage: "specify image names not to remove",
 		},
 		cli.StringFlag{
 			Name:  "duration, d",

@@ -45,8 +45,7 @@ GLOBAL OPTIONS:
 
 # Author
 
-TANABE Ken-ichi
-Wulonghui
+ TANABE Ken-ichi
 
 # LICENSE
 
