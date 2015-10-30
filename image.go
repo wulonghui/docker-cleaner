@@ -33,7 +33,7 @@ func (i images) FilterByIncludeName(include []string) images {
 		for i := range image.RepoTags {
 			//include
 			for _, name := range include {
-				if strings.HasPrefix(image.RepoTags[i], name) {
+				if strings.Contains(image.RepoTags[i], name) {
 					return true
 				}
 			}
@@ -48,7 +48,7 @@ func (i images) FilterByExclusiveName(exclusive []string) images {
 		for i := range image.RepoTags {
 			//exclusive
 			for _, name := range exclusive {
-				if strings.HasPrefix(image.RepoTags[i], name) {
+				if strings.Contains(image.RepoTags[i], name) {
 					return false
 				}
 			}
@@ -64,6 +64,13 @@ func (i images) FilterByCreatedAt(d time.Duration) images {
 	})
 }
 
+func (i images) FilterInUse(m map[string]bool) images {
+	return i.Filter(func(object interface{}) bool {
+		image := object.(docker.APIImages)
+		return !m[image.ID]
+	})
+}
+
 func listImages(client *docker.Client) (images, error) {
 	images := images{}
 	apiImages, err := client.ListImages(docker.ListImagesOptions{All: false})
@@ -74,6 +81,24 @@ func listImages(client *docker.Client) (images, error) {
 		images = append(images, apiImages[i])
 	}
 	return apiImages, nil
+}
+
+func listInUseImages(client *docker.Client) (map[string]bool, error) {
+	containers, err := client.ListContainers(docker.ListContainersOptions{All: true})
+	if err != nil {
+		return nil, err
+	}
+
+	inUseImages := map[string]bool{}
+	for _, container := range containers {
+
+		ci, err := client.InspectContainer(container.ID)
+		if err != nil {
+			return nil, err
+		}
+		inUseImages[ci.Image] = true
+	}
+	return inUseImages, nil
 }
 
 func doImage(c *cli.Context) {
@@ -92,10 +117,16 @@ func doImage(c *cli.Context) {
 		log.Fatal(err)
 	}
 
+	inUseImages, err := listInUseImages(client)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	include := c.StringSlice("include")
 	exclusive := c.StringSlice("exclusive")
 
 	ret := images.
+		FilterInUse(inUseImages).
 		FilterByIncludeName(include).
 		FilterByExclusiveName(exclusive).
 		FilterByCreatedAt(duration)
